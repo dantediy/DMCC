@@ -214,13 +214,21 @@ jobs:
       - run: 
           command: |
             yum install tar gzip -y
-
+            yum install python3 -y
+            python3 -m pip install ansible
       - attach_workspace:
           at: ~/project/.circleci/ansible       
       - run:
           name: install dependencies
           command: |
-
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+            . ~/.nvm/nvm.sh
+            nvm install --lts 
+            cd backend
+            npm i
+            npm run build
+            cd ..
+            tar -C backend -czvf artifact.tar.gz .
             cat ~/project/.circleci/ansible/inventory 
             ansible-playbook -i inventory deploy-backend.yml
 
@@ -248,14 +256,3 @@ workflows:
       # - deploy_frontend
       - deploy_backend:
           requires: [deploy_infrastructure]
-                  # yum install python3 -y
-            # python3 -m pip install ansible
-
-                  # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-            # . ~/.nvm/nvm.sh
-            # nvm install --lts 
-            # cd backend
-            # npm i
-            # npm run build
-            # cd ..
-            # tar -C backend -czvf artifact.tar.gz .
