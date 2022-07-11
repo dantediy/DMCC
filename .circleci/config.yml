@@ -156,7 +156,7 @@ jobs:
             cat ~/project/.circleci/ansible/inventory
             ansible-playbook -i ~/project/.circleci/ansible/inventory ~/project/.circleci/ansible/configure-server.yml
 
-  run-migrations:
+  run_migrations:
     docker:
       - image: circleci/node:13.8.0
     steps:
