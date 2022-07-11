@@ -246,7 +246,8 @@ workflows:
       #     requires:
       #       - build_backend
       # - deploy_frontend
-      - deploy_backend
+      - deploy_backend:
+          requires: [deploy_infrastructure]
                   # yum install python3 -y
             # python3 -m pip install ansible
 
