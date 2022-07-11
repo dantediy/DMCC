@@ -100,35 +100,35 @@ jobs:
       - run: 
           name: install tar gzip
           command: yum install -y tar gzip
-      - run:
-          name: deploying the backend.yml file which create ec2, sg
-          command: |
-            aws cloudformation deploy \
-            --template-file .circleci/files/backend.yml \
-            --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
-            --tags project=udapeople
-      - run:
-          name: deploying the frontend.yml which create new s3 bucket
-          command: |
-            aws cloudformation deploy \
-            --template-file .circleci/files/frontend.yml \
-            --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
-            --tags project=udapeople
-      - run: sleep 180;
-      - run:
-          name: export ec2 ip public to inventory
-          command: |
-            touch inventory
-            echo [all] > inventory
-            cat inventory
+      # - run:
+      #     name: deploying the backend.yml file which create ec2, sg
+      #     command: |
+      #       aws cloudformation deploy \
+      #       --template-file .circleci/files/backend.yml \
+      #       --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+      #       --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+      #       --tags project=udapeople
+      # - run:
+      #     name: deploying the frontend.yml which create new s3 bucket
+      #     command: |
+      #       aws cloudformation deploy \
+      #       --template-file .circleci/files/frontend.yml \
+      #       --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+      #       --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+      #       --tags project=udapeople
+      # - run: sleep 180;
+      # - run:
+      #     name: export ec2 ip public to inventory
+      #     command: |
+      #       touch inventory
+      #       echo [all] > inventory
+      #       cat inventory
       - run:
           name: fetch ec2 public ip
           command: |
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --filters "Name=tag:UdacityProject,Values=EC2" \
+            --filters "Name=tag:project,Values=udapeople" \
             --output text >> inventory
             cat inventory
       - persist_to_workspace:
@@ -140,15 +140,15 @@ jobs:
 workflows:
   default:
     jobs:
-      - build_frontend
-      - build_backend
-      - test_frontend:
-          requires: [build_frontend]
-      - test_backend:
-          requires: [build_backend]
-      - scan_backend:
-          requires: [build_backend]
-      - scan_frontend:
-          requires: [build_frontend]
-      - deploy_infrastructure:
-         requires: [test_frontend, test_backend, scan_frontend, scan_backend]
+      # - build_frontend
+      # - build_backend
+      # - test_frontend:
+      #     requires: [build_frontend]
+      # - test_backend:
+      #     requires: [build_backend]
+      # - scan_backend:
+      #     requires: [build_backend]
+      # - scan_frontend:
+      #     requires: [build_frontend]
+      - deploy_infrastructure #:
+        #  requires: [test_frontend, test_backend, scan_frontend, scan_backend]
