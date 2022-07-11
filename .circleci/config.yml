@@ -222,7 +222,7 @@ jobs:
           name: install dependencies
           command: |
             pwd
-            tar -C README.md -czvf artifact.tar.gz .
+            tar -C backend -czvf artifact.tar.gz .
             ls -la
             cd ~/project/.circleci/ansible
             ansible-playbook -i inventory deploy-backend.yml
