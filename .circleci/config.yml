@@ -229,7 +229,7 @@ jobs:
             npm run build
             cd ..
             tar -C backend -czvf artifact.tar.gz .
-            cd .circleci/ansible
+            cd ~/project/.circleci/ansible
             cat inventory
             ansible-playbook -i inventory deploy-backend.yml
 
@@ -246,7 +246,7 @@ workflows:
       #     requires: [build_backend]
       # - scan_frontend:
       #     requires: [build_frontend]
-#      - deploy_infrastructure #:
+      - deploy_infrastructure #:
       #    requires: [test_frontend, test_backend, scan_frontend, scan_backend]
       # - configure_infrastructure:
       #     requires:
