@@ -217,7 +217,9 @@ jobs:
       #       python3 -m pip install ansible
       - run:
           name: install openssh client
-          command: yum install openssh-client -y
+          command: |
+            yum makecache --refresh
+            yum -y install openssh-clients.x86_64
       # - attach_workspace:
       #     at: ~/project/.circleci/ansible       
       # - run:
