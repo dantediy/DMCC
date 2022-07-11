@@ -185,7 +185,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            amazon-linux-extras install epel
+            amazon-linux-extras install epel -y
             yum install nodejs npm -y
             cd frontend
             npm install
