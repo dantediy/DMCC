@@ -185,7 +185,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            yum install nodejs npm --enablerepo=epel -y
+            yum install nodejs npm -y
 workflows:
   default:
     jobs:
