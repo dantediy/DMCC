@@ -117,12 +117,12 @@ jobs:
       #       --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
       #       --tags project=udapeople
       # - run: sleep 180;
-      # - run:
-      #     name: export ec2 ip public to inventory
-      #     command: |
-      #       touch inventory
-      #       echo [all] > inventory
-      #       cat inventory
+      - run:
+          name: export ec2 ip public to inventory
+          command: |
+            touch inventory
+            echo [all] > inventory
+            cat inventory
       - run:
           name: fetch ec2 public ip
           command: |
