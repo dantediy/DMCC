@@ -178,11 +178,23 @@ jobs:
             fi
             curl --insecure https://kvdb.io/VWiZ1sX8Kje7NGMD4uBkCn/migration_$\{CIRCLE_WORKFLOW_ID:0:7\}
 
+  deploy_frontend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps: 
+      - run:
+          name: install dependencies
+          command: |
+            yum install unzip -y
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+            ./aws/install -i /usr/local/aws-cli -b /usr/local/bin
 workflows:
   default:
     jobs:
       # - build_frontend
-      - build_backend
+      # - build_backend
       # - test_frontend:
       #     requires: [build_frontend]
       # - test_backend:
@@ -196,6 +208,7 @@ workflows:
       # - configure_infrastructure:
       #     requires:
       #       - deploy_infrastructure
-      - run_migrations:
-          requires:
-            - build_backend
+      # - run_migrations:
+      #     requires:
+      #       - build_backend
+      - deploy_frontend
