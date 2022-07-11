@@ -211,13 +211,25 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["91:00:ac:28:f2:22:31:29:9d:99:c0:3e:75:01:15:72"]
+      - attach_workspace:
+          at: ~/project/.circleci/ansible          
       - run:
           name: install dependencies
           command: |
             yum install python3 -y
             python3 -m pip install ansible
-      - attach_workspace:
-          at: ~/project/.circleci/ansible
+            yum install -t tar gzip
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+            . ~/.nvm/nvm.sh
+            nvm install --lts 
+            cd backend
+            npm i
+            npm run build
+            cd ..
+            tar -C backend -czvf artifact.tar.gz .
+            cd .circleci/ansible
+            cat inventory
+            ansible-playbook -i inventory deploy-backend.yml
 
 workflows:
   default:
@@ -241,8 +253,4 @@ workflows:
       #     requires:
       #       - build_backend
       # - deploy_frontend
-            #       yum install -t tar gzip
-            # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-            # . ~/.nvm/nvm.sh
-            # nvm install --lts    
       - deploy_backend
