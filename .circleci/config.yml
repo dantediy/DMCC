@@ -211,20 +211,23 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["91:00:ac:28:f2:22:31:29:9d:99:c0:3e:75:01:15:72"]
-      - run: 
-          command: |
-            yum install tar gzip python3 openssh-client -y
-            python3 -m pip install ansible
-      - attach_workspace:
-          at: ~/project/.circleci/ansible       
+      # - run: 
+      #     command: |
+      #       yum install tar gzip python3 -y
+      #       python3 -m pip install ansible
       - run:
-          name: install dependencies
-          command: |
-            pwd
-            tar -C backend -czvf artifact.tar.gz .
-            ls -la
-            cd ~/project/.circleci/ansible
-            ansible-playbook -i inventory deploy-backend.yml
+          name: install openssh client
+          command: yum install openssh-client -y
+      # - attach_workspace:
+      #     at: ~/project/.circleci/ansible       
+      # - run:
+      #     name: install dependencies
+      #     command: |
+      #       pwd
+      #       tar -C backend -czvf artifact.tar.gz .
+      #       ls -la
+      #       cd ~/project/.circleci/ansible
+      #       ansible-playbook -i inventory deploy-backend.yml
 
 workflows:
   default:
