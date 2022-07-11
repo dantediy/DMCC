@@ -185,8 +185,9 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            yum install npm -y
-            cd frontend
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+            . ~/.nvm/nvm.sh
+            nvm install-latest-npm
             npm install
             npm run build
 workflows:
