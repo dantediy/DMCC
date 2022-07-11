@@ -172,4 +172,6 @@ workflows:
       #     requires: [build_frontend]
       - deploy_infrastructure #:
       #    requires: [test_frontend, test_backend, scan_frontend, scan_backend]
-      - configure_infrastructure
+      - configure_infrastructure:
+          requires:
+            - deploy_infrastructure
