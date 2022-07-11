@@ -97,9 +97,9 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - run: 
-          name: install tar gzip
-          command: yum install -y tar gzip
+      # - run: 
+      #     name: install tar gzip
+      #     command: yum install -y tar gzip
       # - run:
       #     name: deploying the backend.yml file which create ec2, sg
       #     command: |
@@ -121,7 +121,7 @@ jobs:
           name: export ec2 ip public to inventory
           command: |
             touch inventory
-            echo [all] > inventory
+            echo [web] > inventory
             cat inventory
       - run:
           name: fetch ec2 public ip
@@ -136,6 +136,20 @@ jobs:
           paths:
             - inventory
       - destroy-environment
+
+  configure_infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["91:00:ac:28:f2:22:31:29:9d:99:c0:3e:75:01:15:72"]
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: install dependencies
+          command: |
+            apk add --update ansible
 
 workflows:
   default:

@@ -1,0 +1,41 @@
+---
+  - name: update
+    become: yes
+    apt:
+      update_cache: yes
+  
+  - name: upgrade
+    become: yes
+    apt:
+      upgrade: yes
+
+  - name: install python3-pip
+    become: yes
+    apt: 
+      name: python3-pip
+      state: present
+
+  - name: install node JS
+    become: yes
+    apt:
+      name: nodejs
+      state: present
+
+  - name: install npm
+    become: yes
+    apt:
+      name: npm
+      state: present
+
+  - name: install build-essential
+    become: yes
+    apt:
+      name: build-essential
+      state: present
+
+  - name: install pm2
+    become: yes
+    npm:
+      name: pm2
+      state: present
+      global: yes
