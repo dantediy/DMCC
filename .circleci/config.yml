@@ -174,9 +174,9 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              curl --insecure https://kvdb.io/MmbHMRjY3mn5k392GrMMc7/migration_$\{CIRCLE_WORKFLOW_ID:0:7\} -d '1'
+              curl --insecure https://kvdb.io/VWiZ1sX8Kje7NGMD4uBkCn/migration_$\{CIRCLE_WORKFLOW_ID:0:7\} -d '1'
             fi
-            curl --insecure https://kvdb.io/MmbHMRjY3mn5k392GrMMc7/migration_$\{CIRCLE_WORKFLOW_ID:0:7\}
+            curl --insecure https://kvdb.io/VWiZ1sX8Kje7NGMD4uBkCn/migration_$\{CIRCLE_WORKFLOW_ID:0:7\}
 
 workflows:
   default:
