@@ -156,12 +156,33 @@ jobs:
             cat ~/project/.circleci/ansible/inventory
             ansible-playbook -i ~/project/.circleci/ansible/inventory ~/project/.circleci/ansible/configure-server.yml
 
+  run-migrations:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [backend-build]
+      - run:
+          name: run migrations
+          command: |
+            cd backend
+            npm install
+            npm run migrations > migrations_dump.txt
+      - run:
+          name: send migration status to kvdb.io
+          command: |
+            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
+            then
+              curl https://kvdb.io/MmbHMRjY3mn5k392GrMMc7/migration_$\{CIRCLE_WORKFLOW_ID:0:7\} -d '1'
+            fi
+            curl --insecure https://kvdb.io/MmbHMRjY3mn5k392GrMMc7/migration_$\{CIRCLE_WORKFLOW_ID:0:7\}
 
 workflows:
   default:
     jobs:
       # - build_frontend
-      # - build_backend
+      - build_backend
       # - test_frontend:
       #     requires: [build_frontend]
       # - test_backend:
@@ -170,8 +191,11 @@ workflows:
       #     requires: [build_backend]
       # - scan_frontend:
       #     requires: [build_frontend]
-      - deploy_infrastructure #:
+#      - deploy_infrastructure #:
       #    requires: [test_frontend, test_backend, scan_frontend, scan_backend]
-      - configure_infrastructure:
+      # - configure_infrastructure:
+      #     requires:
+      #       - deploy_infrastructure
+      - run_migrations:
           requires:
-            - deploy_infrastructure
+            - build_backend
