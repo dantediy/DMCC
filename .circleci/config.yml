@@ -204,6 +204,21 @@ jobs:
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
 
+  deploy_backend:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["91:00:ac:28:f2:22:31:29:9d:99:c0:3e:75:01:15:72"]
+      - run:
+          name: install dependencies
+          command: |
+            yum install python3 -y
+            python3 -m pip install ansible
+      - attach_workspace:
+          at: ~/project/.circleci/ansible
+
 workflows:
   default:
     jobs:
@@ -225,4 +240,9 @@ workflows:
       # - run_migrations:
       #     requires:
       #       - build_backend
-      - deploy_frontend
+      # - deploy_frontend
+            #       yum install -t tar gzip
+            # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+            # . ~/.nvm/nvm.sh
+            # nvm install --lts    
+      - deploy_backend
