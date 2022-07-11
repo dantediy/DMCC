@@ -213,8 +213,7 @@ jobs:
           fingerprints: ["91:00:ac:28:f2:22:31:29:9d:99:c0:3e:75:01:15:72"]
       - run: 
           command: |
-            yum install tar gzip -y
-            yum install python3 -y
+            yum install tar gzip python3 openssh-client -y
             python3 -m pip install ansible
       - attach_workspace:
           at: ~/project/.circleci/ansible       
