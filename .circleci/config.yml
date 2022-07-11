@@ -211,14 +211,14 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["91:00:ac:28:f2:22:31:29:9d:99:c0:3e:75:01:15:72"]
-      - run: 
-          command: |
-            yum install tar gzip python3 -y
+      # - run: 
+      #     command: |
+      #       yum install tar gzip python3 -y
       #       python3 -m pip install ansible
       - run:
           name: install openssh client
           command: |
-            apk add openssh-client
+            yum install openssh-clients -y
       # - attach_workspace:
       #     at: ~/project/.circleci/ansible       
       # - run:
