@@ -150,6 +150,10 @@ jobs:
           name: install dependencies
           command: |
             apk add --update ansible
+      - run:
+          name: configure server
+          command: ansible-playbook -i inventory configure-server.yml
+
 
 workflows:
   default:
@@ -164,5 +168,6 @@ workflows:
       #     requires: [build_backend]
       # - scan_frontend:
       #     requires: [build_frontend]
-      - deploy_infrastructure #:
-        #  requires: [test_frontend, test_backend, scan_frontend, scan_backend]
+      # - deploy_infrastructure:
+      #    requires: [test_frontend, test_backend, scan_frontend, scan_backend]
+      - configure_infrastructure
