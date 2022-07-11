@@ -174,7 +174,7 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              curl https://kvdb.io/MmbHMRjY3mn5k392GrMMc7/migration_$\{CIRCLE_WORKFLOW_ID:0:7\} -d '1'
+              curl --insecure https://kvdb.io/MmbHMRjY3mn5k392GrMMc7/migration_$\{CIRCLE_WORKFLOW_ID:0:7\} -d '1'
             fi
             curl --insecure https://kvdb.io/MmbHMRjY3mn5k392GrMMc7/migration_$\{CIRCLE_WORKFLOW_ID:0:7\}
 
@@ -196,7 +196,6 @@ workflows:
       # - configure_infrastructure:
       #     requires:
       #       - deploy_infrastructure
-      
       - run_migrations:
           requires:
             - build_backend
