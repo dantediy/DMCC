@@ -196,6 +196,7 @@ workflows:
       # - configure_infrastructure:
       #     requires:
       #       - deploy_infrastructure
+      
       - run_migrations:
           requires:
             - build_backend
