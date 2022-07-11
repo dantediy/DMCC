@@ -229,7 +229,7 @@ jobs:
             npm run build
             cd ..
             tar -C backend -czvf artifact.tar.gz .
-            cat ~/project/.circleci/ansible/inventory 
+            cd ~/project/.circleci/ansible
             ansible-playbook -i inventory deploy-backend.yml
 
 workflows:
