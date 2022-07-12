@@ -100,23 +100,23 @@ jobs:
       - run: 
           name: install tar gzip
           command: yum install -y tar gzip
-      # - run:
-      #     name: deploying the backend.yml file which create ec2, sg
-      #     command: |
-      #       aws cloudformation deploy \
-      #       --template-file .circleci/files/backend.yml \
-      #       --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-      #       --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
-      #       --tags project=udapeople
-      # - run:
-      #     name: deploying the frontend.yml which create new s3 bucket
-      #     command: |
-      #       aws cloudformation deploy \
-      #       --template-file .circleci/files/frontend.yml \
-      #       --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-      #       --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
-      #       --tags project=udapeople
-      # - run: sleep 180;
+      - run:
+          name: deploying the backend.yml file which create ec2, sg
+          command: |
+            aws cloudformation deploy \
+            --template-file .circleci/files/backend.yml \
+            --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+            --tags project=udapeople
+      - run:
+          name: deploying the frontend.yml which create new s3 bucket
+          command: |
+            aws cloudformation deploy \
+            --template-file .circleci/files/frontend.yml \
+            --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+            --tags project=udapeople
+      - run: sleep 180;
       - run:
           name: export ec2 ip public to inventory
           command: |
@@ -174,9 +174,10 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              curl --insecure https://kvdb.io/VWiZ1sX8Kje7NGMD4uBkCn/migration_$\{CIRCLE_WORKFLOW_ID:0:7\} -d '1'
+              curl https://kvdb.io/QG61yAkDiUC4gX83yRNLJt/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+              curl --insecure https://kvdb.io/QG61yAkDiUC4gX83yRNLJt/migration_${CIRCLE_WORKFLOW_ID:0:7}
             fi
-            curl --insecure https://kvdb.io/VWiZ1sX8Kje7NGMD4uBkCn/migration_$\{CIRCLE_WORKFLOW_ID:0:7\}
+              return 1
 
   deploy_frontend:
     docker:
@@ -235,17 +236,39 @@ jobs:
             cd ~/project/.circleci/ansible
             ansible-playbook -i inventory deploy-backend.yml
 
-  # smoke_test:
-  #   docker:
-  #     - image: alpine:latest
-  #   steps:
-  #     - 
+  smoke_test:
+    docker:
+      - image: alpine:latest
+    steps:
+      - run:
+          name: backend smoke test
+          command: |
+            export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople")
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+            if curl "${API_URL}/api/status" | grep "ok"
+            then
+                return 0
+            else
+                return 1
+            fi
+      - run:
+          name: frontend smoke test
+          command: |
+            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-2.amazonaws.com/#/employees"
+            echo ${URL} 
+            if curl -s ${URL} | grep "Welcome"
+            then
+              return 1
+            else
+              return 1
+            fi
 
 workflows:
   default:
     jobs:
       # - build_frontend
-      # - build_backend
+      - build_backend
       # - test_frontend:
       #     requires: [build_frontend]
       # - test_backend:
@@ -258,11 +281,12 @@ workflows:
       #    requires: [test_frontend, test_backend, scan_frontend, scan_backend]
       # - configure_infrastructure:
       #     requires: [deploy_infrastructure]
-      # - run_migrations:
-      #     requires: [configure_infrastructure]
-      - deploy_frontend
-#          requires: [run_migrations]
+      - run_migrations:
+          requires: [build_backend]
+          # requires: [configure_infrastructure]
+      # - deploy_frontend:
+      #    requires: [run_migrations]
       # - deploy_backend:
-#          requires: [run_migrations]
-
-
+      #    requires: [run_migrations]
+      # - smoke_test:
+      #     requires: [deploy_frontend, deploy_backend]
