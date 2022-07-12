@@ -2,9 +2,9 @@ version: 2.1
 
 commands:
   destroy-environment:
-  parameters:
-    workflow_id:
-      type: string
+    parameters:
+      workflow_id:
+        type: string
     steps:
       - run: 
           name: destroy environment on fail
@@ -15,9 +15,9 @@ commands:
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
 
   revert_migration:
-  parameters:
-    workflow_id:
-      type: string
+    parameters:
+      workflow_id:
+        type: string
     steps:
       - run:
           name: revert migrations
