@@ -313,9 +313,11 @@ jobs:
           command: |
             if [[ "${STACKS[@]}" != "udapeople-${OldWorkflowID}" ]]
             then
+              echo Deletinggggggggggggg ........
               aws s3 rm "s3://udapeople-040870255814" --recursive
               aws cloudformation delete-stack --stack-name InitialStack
             fi
+              echo Nope
 
 workflows:
   default:
