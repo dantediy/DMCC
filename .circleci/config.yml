@@ -253,7 +253,7 @@ jobs:
 
   smoke_test:
     docker:
-      - image: alpine:latest
+      - image: amazon/aws-cli
     steps:
       - run:
           name: backend smoke test
@@ -319,25 +319,25 @@ jobs:
 workflows:
   default:
     jobs:
-      - build_frontend
-      - build_backend
-      - test_frontend:
-          requires: [build_frontend]
-      - test_backend:
-          requires: [build_backend]
-      - scan_backend:
-          requires: [build_backend]
-      - scan_frontend:
-          requires: [build_frontend]
-      - deploy_infrastructure:
-         requires: [test_frontend, test_backend, scan_frontend, scan_backend]
-      - configure_infrastructure:
-          requires: [deploy_infrastructure]
-      - run_migrations:
-          requires: [configure_infrastructure]
-      - deploy_frontend:
-         requires: [run_migrations]
-      - deploy_backend:
-         requires: [run_migrations]
-      - smoke_test:
-          requires: [deploy_frontend, deploy_backend]
+      # - build_frontend
+      # - build_backend
+      # - test_frontend:
+      #     requires: [build_frontend]
+      # - test_backend:
+      #     requires: [build_backend]
+      # - scan_backend:
+      #     requires: [build_backend]
+      # - scan_frontend:
+      #     requires: [build_frontend]
+      # - deploy_infrastructure:
+      #    requires: [test_frontend, test_backend, scan_frontend, scan_backend]
+      # - configure_infrastructure:
+      #     requires: [deploy_infrastructure]
+      # - run_migrations:
+      #     requires: [configure_infrastructure]
+      # - deploy_frontend:
+      #    requires: [run_migrations]
+      # - deploy_backend:
+      #    requires: [run_migrations]
+      - smoke_test #:
+          # requires: [deploy_frontend, deploy_backend]
