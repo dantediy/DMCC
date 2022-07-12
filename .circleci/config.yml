@@ -312,7 +312,7 @@ jobs:
           name: delete old workflow
           command: |
             echo ${CIRCLE_WORKFLOW_ID}
-            echo ${OldWorkflowID}"
+            echo ${OldWorkflowID}
             if [[ "${CIRCLE_WORKFLOW_ID}" != "${OldWorkflowID}" ]]
             then
               echo Deletinggggggggggggg ........
