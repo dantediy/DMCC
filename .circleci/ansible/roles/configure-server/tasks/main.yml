@@ -14,24 +14,28 @@
     apt: 
       name: python3-pip
       state: present
+      update_cache: yes
 
   - name: install node JS
     become: yes
     apt:
       name: nodejs
       state: present
+      update_cache: yes
 
   - name: install npm
     become: yes
     apt:
       name: npm
       state: present
+      update_cache: yes
 
   - name: install build-essential
     become: yes
     apt:
       name: build-essential
       state: present
+      update_cache: yes
 
   - name: install pm2
     become: yes
