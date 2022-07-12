@@ -23,7 +23,7 @@
 
   - name: extract backend artifact
     become: yes
-    shell: |
+    command: |
       mkdir backend
       tar -xvzf artifact.tar.gz -C backend
       npm install
