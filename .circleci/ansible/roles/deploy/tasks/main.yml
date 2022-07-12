@@ -23,8 +23,9 @@
 
   - name: extract backend artifact
     become: yes
-    command: |
-      mkdir backend
-      tar -xvzf artifact.tar.gz -C backend
-      npm install
-      pm2 start npm -- start
+    command: "{{ item }}"
+    with_items:
+      - mkdir backend
+      - tar -xvzf artifact.tar.gz -C backend
+      - npm install
+      - pm2 start npm -- start
