@@ -224,14 +224,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-            . ~/.nvm/nvm.sh
-            nvm install --lts 
-            cd backend
-            npm i
-            npm run build
-            cd ..
-            tar -C backend -czvf artifact.tar.gz .
+
             cd ~/project/.circleci/ansible
             ansible-playbook -i inventory deploy-backend.yml
 
@@ -260,4 +253,11 @@ workflows:
           requires: [deploy_infrastructure]
 #          requires: [run_migrations]
 
-
+            # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+            # . ~/.nvm/nvm.sh
+            # nvm install --lts 
+            # cd backend
+            # npm i
+            # npm run build
+            # cd ..
+            # tar -C backend -czvf artifact.tar.gz .

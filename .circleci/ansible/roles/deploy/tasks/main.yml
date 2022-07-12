@@ -15,8 +15,6 @@
     become: yes
     command: "{{ item }}"
     with_items:
-      - mkdir backend
-      - tar -xvzf artifact.tar.gz -C backend
-      - cd backend
+      - tar -xvzf artifact.tar.gz
       - npm install
       - pm2 start npm -- start
