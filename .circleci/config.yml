@@ -17,7 +17,7 @@ commands:
           name: revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure  https://kvdb.io/9GE4jRtKznmVKRfvdBABBe/migration_$\{CIRCLE_WORKFLOW_ID:0:7\})
+            SUCCESS=$(curl --insecure  https://kvdb.io/VgMHYL7xkCuPFY7zNJKd5w/migration_$\{CIRCLE_WORKFLOW_ID:0:7\})
             if (( $SUCCESS == 1 ));
             then
                 cd ~/project/backend
@@ -150,7 +150,7 @@ jobs:
           root: ~/project
           paths:
             - inventory
-      - destroy-environment
+      - revert_migration
 
   configure_infrastructure:
     docker:
@@ -170,7 +170,7 @@ jobs:
           command: |
             cat ~/project/.circleci/ansible/inventory
             ansible-playbook -i ~/project/.circleci/ansible/inventory ~/project/.circleci/ansible/configure-server.yml
-
+      - revert_migration
   run_migrations:
     docker:
       - image: circleci/node:13.8.0
@@ -189,11 +189,11 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              curl https://kvdb.io/6XapDhinBi2VB1Pqyw2LJH/migration_$\{CIRCLE_WORKFLOW_ID:0:7\} -d '1'
-              curl --insecure https://kvdb.io/6XapDhinBi2VB1Pqyw2LJH/migration_$\{CIRCLE_WORKFLOW_ID:0:7\}
+              curl https://kvdb.io/VgMHYL7xkCuPFY7zNJKd5w/migration_$\{CIRCLE_WORKFLOW_ID:0:7\} -d '1'
+              curl --insecure https://kvdb.io/VgMHYL7xkCuPFY7zNJKd5w/migration_$\{CIRCLE_WORKFLOW_ID:0:7\}
             fi
               echo migration failed
-
+      - revert_migration
   deploy_frontend:
     docker:
       - image: amazon/aws-cli
@@ -219,7 +219,7 @@ jobs:
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-
+      - revert_migration
   deploy_backend:
     docker:
       - image: amazon/aws-cli
@@ -240,17 +240,10 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-            . ~/.nvm/nvm.sh
-            nvm install --lts 
-            cd backend
-            npm i
-            npm run build
-            cd ..
-            tar -C backend -czvf artifact.tar.gz .
+
             cd ~/project/.circleci/ansible
             ansible-playbook -i inventory deploy-backend.yml
-
+      - revert_migration
   smoke_test:
     docker:
       - image: amazon/aws-cli
@@ -279,7 +272,7 @@ jobs:
             else
               exit 1
             fi
-
+      - revert_migration
   cloudfront-update:
     docker:
       - image: amazon/aws-cli
@@ -288,7 +281,7 @@ jobs:
       - run:
           name: switch to new s3 bucket
           command: aws cloudformation deploy --template-file .circleci/files/cloudfront.yml --stack-name InitialStack --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" --tags project=udapeople
-
+      - revert_migration
   cleanup:
     docker:
       - image: amazon/aws-cli
@@ -316,29 +309,38 @@ jobs:
 workflows:
   default:
     jobs:
-      - build_frontend
-      - build_backend
-      - test_frontend:
-          requires: [build_frontend]
-      - test_backend:
-          requires: [build_backend]
-      - scan_backend:
-          requires: [build_backend]
-      - scan_frontend:
-          requires: [build_frontend]
-      - deploy_infrastructure:
-         requires: [test_frontend, test_backend, scan_frontend, scan_backend]
-      - configure_infrastructure:
-          requires: [deploy_infrastructure]
-      - run_migrations:
-          requires: [configure_infrastructure]
-      - deploy_frontend:
-         requires: [run_migrations]
-      - deploy_backend:
-         requires: [run_migrations]
-      - smoke_test:
-          requires: [deploy_backend, deploy_frontend]
-      - cloudfront-update:
-          requires: [smoke_test]
-      - cleanup:
-          requires: [cloudfront-update]
+      # - build_frontend
+      # - build_backend
+      # - test_frontend:
+      #     requires: [build_frontend]
+      # - test_backend:
+      #     requires: [build_backend]
+      # - scan_backend:
+      #     requires: [build_backend]
+      # - scan_frontend:
+      #     requires: [build_frontend]
+      # - deploy_infrastructure:
+      #    requires: [test_frontend, test_backend, scan_frontend, scan_backend]
+      # - configure_infrastructure:
+      #     requires: [deploy_infrastructure]
+      # - run_migrations:
+      #     requires: [configure_infrastructure]
+      # - deploy_frontend:
+      #    requires: [run_migrations]
+      - deploy_backend #:
+        #  requires: [run_migrations]
+      # - smoke_test:
+      #     requires: [deploy_backend, deploy_frontend]
+      # - cloudfront-update:
+      #     requires: [smoke_test]
+      # - cleanup:
+      #     requires: [cloudfront-update]
+
+                  # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+            # . ~/.nvm/nvm.sh
+            # nvm install --lts 
+            # cd backend
+            # npm i
+            # npm run build
+            # cd ..
+            # tar -C backend -czvf artifact.tar.gz .
