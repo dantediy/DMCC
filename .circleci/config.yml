@@ -294,7 +294,7 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - run:
-          name: fetch old workflow ID
+          name: cleanup
           command: |
             export OldWorkflowID=$(aws cloudformation \
             list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
@@ -312,18 +312,15 @@ jobs:
             echo ${OldWorkflowID}
             echo ${STACKS[@]}
 
-      # - run:
-      #     name: delete old workflow
-      #     command: |
-
-      #       if [[ "${CIRCLE_WORKFLOW_ID}" != "${OldWorkflowID}" ]]
-      #       then
-      #         echo Deletinggggggggggggg ........
-
-      #       else
-      #         echo Nope
-      #       fi
-
+            if [[ "${CIRCLE_WORKFLOW_ID}" != "${OldWorkflowID}" ]]
+            then
+              echo Deletinggggggggggggg ........
+              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+            else
+              echo Nope
+            fi
 
 workflows:
   default:
@@ -355,6 +352,3 @@ workflows:
       - cleanup #:
           # requires: [cloudfront-update]
 
-              #           aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
-              # aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
-              # aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
