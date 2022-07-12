@@ -1,15 +1,15 @@
 ---
 
-  - name: cp artifact tar to ec2
-    copy:
-      src: ~/project/artifact.tar.gz
-      dest: ~/
+  # - name: cp artifact tar to ec2
+  #   copy:
+  #     src: ~/project/artifact.tar.gz
+  #     dest: ~/
 
-  - name: install tar 
-    become: yes
-    apt:
-      name: tar
-      state: present
+  # - name: install tar 
+  #   become: yes
+  #   apt:
+  #     name: tar
+  #     state: present
 
   - name: extract backend artifact
     become: yes
