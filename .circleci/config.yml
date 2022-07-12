@@ -235,11 +235,11 @@ jobs:
             cd ~/project/.circleci/ansible
             ansible-playbook -i inventory deploy-backend.yml
 
-  smoke_test:
-    docker:
-      - image: alpine:latest
-    steps:
-      - 
+  # smoke_test:
+  #   docker:
+  #     - image: alpine:latest
+  #   steps:
+  #     - 
 
 workflows:
   default:
