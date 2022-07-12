@@ -325,30 +325,30 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build_frontend
-      # - build_backend
-      # - test_frontend:
-      #     requires: [build_frontend]
-      # - test_backend:
-      #     requires: [build_backend]
-      # - scan_backend:
-      #     requires: [build_backend]
-      # - scan_frontend:
-      #     requires: [build_frontend]
-      # - deploy_infrastructure:
-      #    requires: [test_frontend, test_backend, scan_frontend, scan_backend]
-      # - configure_infrastructure:
-      #     requires: [deploy_infrastructure]
-      # - run_migrations:
-      #     requires: [configure_infrastructure]
-      # - deploy_frontend:
-      #    requires: [run_migrations]
-      # - deploy_backend:
-      #    requires: [run_migrations]
-      # - smoke_test:
-      #     requires: [deploy_backend, deploy_frontend]
-      # - cloudfront-update:
-      #     requires: [smoke_test]
-      - cleanup #:
-          # requires: [cloudfront-update]
+      - build_frontend
+      - build_backend
+      - test_frontend:
+          requires: [build_frontend]
+      - test_backend:
+          requires: [build_backend]
+      - scan_backend:
+          requires: [build_backend]
+      - scan_frontend:
+          requires: [build_frontend]
+      - deploy_infrastructure:
+         requires: [test_frontend, test_backend, scan_frontend, scan_backend]
+      - configure_infrastructure:
+          requires: [deploy_infrastructure]
+      - run_migrations:
+          requires: [configure_infrastructure]
+      - deploy_frontend:
+         requires: [run_migrations]
+      - deploy_backend:
+         requires: [run_migrations]
+      - smoke_test:
+          requires: [deploy_backend, deploy_frontend]
+      - cloudfront-update:
+          requires: [smoke_test]
+      - cleanup:
+          requires: [cloudfront-update]
 
