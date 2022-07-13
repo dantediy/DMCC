@@ -275,10 +275,11 @@ jobs:
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
-              exit 0
+              exit 1
             else
               exit 1
             fi
+      - destroy-environment
       - revert_migration
   cloudfront-update:
     docker:
@@ -326,22 +327,22 @@ workflows:
           requires: [build_backend]
       - scan_frontend:
           requires: [build_frontend]
-      - deploy_infrastructure:
-         requires: [test_frontend, test_backend, scan_frontend, scan_backend]
-         filters:
-          branches:
-            only: [main]
-      - configure_infrastructure:
-          requires: [deploy_infrastructure]
-      - run_migrations:
-          requires: [configure_infrastructure]
-      - deploy_frontend:
-         requires: [run_migrations]
-      - deploy_backend:
-          requires: [run_migrations]
-      - smoke_test:
-          requires: [deploy_backend, deploy_frontend]
-      - cloudfront-update:
-          requires: [smoke_test]
-      - cleanup:
-          requires: [cloudfront-update]
+      # - deploy_infrastructure:
+      #    requires: [test_frontend, test_backend, scan_frontend, scan_backend]
+      #    filters:
+      #     branches:
+      #       only: [test-branch]
+      # - configure_infrastructure:
+      #     requires: [deploy_infrastructure]
+      # - run_migrations:
+      #     requires: [configure_infrastructure]
+      # - deploy_frontend:
+      #    requires: [run_migrations]
+      # - deploy_backend:
+      #     requires: [run_migrations]
+      # - smoke_test:
+      #     requires: [deploy_backend, deploy_frontend]
+      # - cloudfront-update:
+      #     requires: [smoke_test]
+      # - cleanup:
+      #     requires: [cloudfront-update]
