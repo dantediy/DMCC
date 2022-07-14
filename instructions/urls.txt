@@ -1,4 +1,4 @@
 Github: https://github.com/dantediy/DMCC
-Frontend: http://udapeople-3c4cee3.s3-website.us-east-2.amazonaws.com/
+Frontend: http://udapeople-28f14be.s3-website.us-east-2.amazonaws.com
 Cloudfront: d3iioui6g7lwrw.cloudfront.net	
-Backend: 18.118.134.174:3030/api/status
+Backend: 18.118.213.56:3030/api/status
